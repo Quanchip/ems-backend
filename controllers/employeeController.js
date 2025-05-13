@@ -59,6 +59,15 @@ const addEmployee = async (req, res) => {
             });
         }
 
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid email format"
+            });
+        }
+
         // Check if email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
