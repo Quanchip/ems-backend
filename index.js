@@ -15,7 +15,7 @@ connectToDatabase()
 const app = express();
 
 // Configure CORS to allow requests from the frontend
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: 'https://ems-frontend-one-ashy.vercel.app' , credentials: true }));
 
 // Parse JSON request bodies
 app.use(express.json());
