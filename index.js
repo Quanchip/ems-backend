@@ -9,14 +9,17 @@ import leaveRoute from './routes/leave.js'
 import attendanceRouter from './routes/attendance.js'
 import settingRoute from './routes/setting.js'
 import dashboardRouter from './routes/dashboard.js' 
+
 connectToDatabase()
 
 const app = express();
 
 // Configure CORS to allow requests from the frontend
-app.use(cors({ 
-    origin: ['https://ems-frontend-one-ashy.vercel.app', 'http://localhost:5173'],
-    credentials: true 
+app.use(cors({
+    origin: 'https://ems-frontend-one-ashy.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 // Parse JSON request bodies
@@ -31,6 +34,7 @@ app.use('/api/leave', leaveRoute)
 app.use('/api/setting', settingRoute)
 app.use('/api/dashboard', dashboardRouter) 
 app.use('/api/attendance', attendanceRouter)
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on ${process.env.PORT}`)
 })
