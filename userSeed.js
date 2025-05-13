@@ -1,43 +1,23 @@
-import mongoose from "mongoose";
-import User from "./models/User.js";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
+import User from './models/User.js'
+import bcrypt from 'bcrypt'
+import connectToDatabase from './db/db.js'
 
-dotenv.config();
-
-const seedAdmin = async () => {
+/**Create ADMIN user */
+const userRegister = async () => {
+  connectToDatabase()
   try {
-    // Kết nối database
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log("Connected to MongoDB");
-
-    // Kiểm tra xem đã có user admin chưa
-    const adminExists = await User.findOne({ role: "admin" });
-    
-    if (!adminExists) {
-      // Tạo user admin nếu chưa có
-      const hashedPassword = await bcrypt.hash("admin123", 10);
-      const admin = new User({
-        name: "Admin",
-        email: "admin@example.com",
-        password: hashedPassword,
-        role: "admin",
-      });
-
-      await admin.save();
-      console.log("Admin user created successfully");
-    } else {
-      console.log("Admin user already exists");
-    }
-
-    // Đóng kết nối
-    await mongoose.connection.close();
-    console.log("Database connection closed");
+    const hashPassword = await bcrypt.hash('admin', 10)
+    const newUser = new User({
+      name: 'Admin',
+      email: 'admin@gmail.com',
+      password: hashPassword,
+      role: 'admin',
+    })
+    await newUser.save()
+    console.log(" MONGO_URI:", process.env.MONGODB_URL);
   } catch (error) {
-    console.error("Error seeding admin user:", error);
-    process.exit(1);
+    console.log(error)
   }
-};
+}
 
-// Chạy seed
-seedAdmin();
+userRegister()
