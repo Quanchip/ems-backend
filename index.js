@@ -27,13 +27,13 @@ app.use(express.json())
 // Parse JSON request bodies
 app.use(
   session({
-    secret: 'secret_key',
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      maxAge: 1000 * 60 * 15,
+      maxAge: 24 * 60 * 60 * 1000
     },
   })
 )

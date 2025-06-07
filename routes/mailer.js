@@ -12,17 +12,25 @@ router.post('/set-email', (req, res) => {
 })
 
 router.post('/send-new-password', async (req, res) => {
+  console.log('Session data:', req.session);
+  console.log('Request body:', req.body);
+  
   const email = req.session.userEmail
-  if (!email)
+  if (!email) {
+    console.log('Email not found in session');
     return res.status(400).json({ message: 'Email not found in session' })
+  }
 
   const { password, key } = req.body
-  if (!password || !key)
+  if (!password || !key) {
+    console.log('Missing password or key in request body');
     return res.status(400).json({ message: 'Password and key are required' })
+  }
 
   req.session.password = password
 
   try {
+    console.log('Attempting to send email to:', email);
     await sendMail({
       to: email,
       subject: '🔐 Your New Password & Verification Code',
@@ -49,10 +57,14 @@ router.post('/send-new-password', async (req, res) => {
       `,
     })
 
+    console.log('Email sent successfully');
     res.json({ message: 'New password email sent' })
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Failed to send new password email' })
+    console.error('Detailed error sending email:', error);
+    res.status(500).json({ 
+      message: 'Failed to send new password email',
+      error: error.message 
+    })
   }
 })
 
